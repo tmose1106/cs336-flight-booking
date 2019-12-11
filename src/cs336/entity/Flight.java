@@ -7,20 +7,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Flight {
-	public String airlineName;
+	public String airlineId, airlineName;
+	public Integer flightNumber;
 	public String flightType;
 	public List<String> daysOfWeek;
 	public Date departDatetime, arrivalDatetime;
 	public Float fareFirst, fareEconomy;
 	
 	public Flight(ResultSet rs) throws SQLException {
+		airlineId = rs.getString("airline_id");
 		airlineName = rs.getString("airline_name");
+		flightNumber = rs.getInt("flight_num");
 		flightType = rs.getString("flight_type");
 		daysOfWeek = parseDays(rs.getString("flight_days"));
 		arrivalDatetime = rs.getDate("arrival");
 		departDatetime = rs.getDate("depart");
 		fareFirst = rs.getFloat("fare_first");
 		fareEconomy = rs.getFloat("fare_economy");
+	}
+
+	public String getAirlineId() {
+		return airlineId;
+	}
+
+	public Integer getFlightNumber() {
+		return flightNumber;
 	}
 
 	private List<String> parseDays(String days) {

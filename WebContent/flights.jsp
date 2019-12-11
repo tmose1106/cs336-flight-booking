@@ -30,6 +30,10 @@
 					<th>Departure</th>
 					<td><fmt:formatDate type="both" value="${flight.departDatetime}" /></td>
 				</tr>
+				<tr>
+					<th>Arrival</th>
+					<td><fmt:formatDate type="both" value="${flight.arrivalDatetime}" /></td>
+				</tr>
 			</table>
 		</c:forEach>
 	</div>
