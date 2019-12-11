@@ -5,8 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,50 +12,51 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cs336.entity.Destination;
 import cs336.entity.Flight;
 import cs336.util.DatabaseUtil;
 
 /**
- * Servlet implementation class FlightsServlet
+ * Servlet implementation class FlightServlet
  */
-@WebServlet("/flights")
-public class FlightsServlet extends HttpServlet {
+@WebServlet("/flight")
+public class FlightServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FlightsServlet() {
+    public FlightServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-    private List<Flight> getFlights() {
-    	List<Flight> list = new ArrayList<Flight>();
+    private Flight getFlight(Integer flight_num, String airline_id) {
+    	Flight flight;
 
 		try (Connection db = DatabaseUtil.getConnection()) {
-			try (PreparedStatement ps = db.prepareStatement("SELECT * FROM flights NATURAL JOIN airlines NATURAL JOIN destinations JOIN departures ON (destinations.flight_num = departures.flight_num & destinations.airline_id = departures.airline_id);")) {				
+			try (PreparedStatement ps = db.prepareStatement("SELECT * FROM flights NATURAL JOIN airlines NATURAL JOIN destinations JOIN departures ON (destinations.flight_num = departures.flight_num & destinations.airline_id = departures.airline_id) WHERE (flight_num = ? AND airline_id = ?);")) {
+				ps.setInt(1, flight_num);
+				ps.setString(2, airline_id);
+				
 				try (ResultSet rs = ps.executeQuery()) {
-					while (rs.next()) {
-						list.add(new Flight(rs));
-					}
+					rs.next();
+					flight = new Flight(rs);
 				}
 			} 
 		} catch (SQLException ex) {
 			return null;
 		}
 				
-		return list;
+		return flight;
     }
-    
     
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("flights", getFlights());
-		request.getRequestDispatcher("/flights.jsp").forward(request, response);
+		request.setAttribute("flight", getFlight(Integer.parseInt(request.getParameter("flight_num")),request.getParameter("airline_id")));
+        
+		request.getRequestDispatcher("/flight.jsp").forward(request, response);
 	}
 
 	/**

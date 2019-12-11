@@ -13,6 +13,7 @@ public class Flight {
 	public List<String> daysOfWeek;
 	public Date departDatetime, arrivalDatetime;
 	public Float fareFirst, fareEconomy;
+	public String airportID;
 	
 	public Flight(ResultSet rs) throws SQLException {
 		airlineId = rs.getString("airline_id");
@@ -24,6 +25,7 @@ public class Flight {
 		departDatetime = rs.getDate("depart");
 		fareFirst = rs.getFloat("fare_first");
 		fareEconomy = rs.getFloat("fare_economy");
+		airportID = rs.getString("airport_id");
 	}
 
 	public String getAirlineId() {
@@ -94,5 +96,9 @@ public class Flight {
 
 	public Float getFareEconomy() {
 		return fareEconomy;
+	}	
+	
+	public String getAirportID() {
+		return airportID;
 	}
 }

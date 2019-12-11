@@ -19,6 +19,15 @@
 		<c:forEach var="flight" items="${flights}">
 			<table>
 				<tr>
+					<th>Departure</th>
+					<td>${flight.airportID}</a></td>
+				</tr>
+				<tr>
+				<tr>
+					<th>Destination</th>
+					<td><a href="flight?flight_num=${flight.flightNumber}&airline_id=${flight.airlineId}">${flight.airportID}</a></td>
+				</tr>
+				<tr>
 					<th>Airline</th>
 					<td>${flight.airlineName}</td>
 				</tr>
@@ -33,6 +42,7 @@
 				<tr>
 					<th>Arrival</th>
 					<td><fmt:formatDate type="both" value="${flight.arrivalDatetime}" /></td>
+					<td><input type="submit" value="View"></td>
 				</tr>
 			</table>
 		</c:forEach>
