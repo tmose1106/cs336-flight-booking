@@ -13,29 +13,23 @@
 <body>
 	<header></header>
 	<h1>Flights</h1>
-	<div id="filters">
-	</div>
-	<div id="flights">
+	<table>
+		<tr>
+			<th>Airline</th>
+			<th>Type</th>
+			<th>Departure</th>
+			<th>Arrival</th>
+			<th>Button</th>
+		</tr>
 		<c:forEach var="flight" items="${flights}">
-			<table>
-				<tr>
-					<th>Airline</th>
-					<td>${flight.airlineName}</td>
-				</tr>
-				<tr>
-					<th>Type</th>
-					<td>${flight.flightType}</td>
-				</tr>
-				<tr>
-					<th>Departure</th>
-					<td><fmt:formatDate type="both" value="${flight.departDatetime}" /></td>
-				</tr>
-				<tr>
-					<th>Arrival</th>
-					<td><fmt:formatDate type="both" value="${flight.arrivalDatetime}" /></td>
-				</tr>
-			</table>
+			<tr>
+				<td>${flight.airlineName}</td>
+				<td>${flight.flightType}</td>
+				<td><fmt:formatDate type="both" value="${flight.departDatetime}" /></td>
+				<td><fmt:formatDate type="both" value="${flight.arrivalDatetime}" /></td>
+				<td><a href="/flight?flight_num=${flight.flightNumber}&airline_id=${flight.airlineId}">View</a>
+			</tr>
 		</c:forEach>
-	</div>
+	</table>
 </body>
 </html>

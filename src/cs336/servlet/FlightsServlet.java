@@ -2,6 +2,7 @@ package cs336.servlet;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,11 +33,22 @@ public class FlightsServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-    private List<Flight> getFlights() {
+    private List<Flight> getFlights(String departDate) {
     	List<Flight> list = new ArrayList<Flight>();
 
+    	String query = "SELECT * FROM flights NATURAL JOIN airlines";
+    	
+    	if (departDate != null) {
+    		query += " WHERE DATE(depart) = ?";
+    	}
+    	
 		try (Connection db = DatabaseUtil.getConnection()) {
-			try (PreparedStatement ps = db.prepareStatement("SELECT * FROM flights JOIN airlines;")) {				
+			try (PreparedStatement ps = db.prepareStatement(query + ";")) {
+				if (departDate != null) {
+					Date depart = Date.valueOf(departDate);
+		    		ps.setDate(1, depart);
+		    	}
+				
 				try (ResultSet rs = ps.executeQuery()) {
 					while (rs.next()) {
 						list.add(new Flight(rs));
@@ -54,7 +66,8 @@ public class FlightsServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("flights", getFlights());
+		String departString = request.getParameter("departureDate");
+		request.setAttribute("flights", getFlights(departString));
         
 		request.getRequestDispatcher("/flights.jsp").forward(request, response);
 	}
