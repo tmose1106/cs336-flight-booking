@@ -28,4 +28,3 @@
     </form>
 </body>
 </html>
-© 2019 GitHub, Inc.
