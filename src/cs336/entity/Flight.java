@@ -90,7 +90,7 @@ public class Flight {
 	public String getDestinationId() {
 		return destinationId;
 	}
-	
+
 	public Date getDepartDatetime() {
 		return departDatetime;
 	}
