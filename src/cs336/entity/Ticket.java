@@ -18,8 +18,8 @@ public class Ticket {
 		roundTrip = rs.getInt("round_trip");
 		bookingFee = rs.getFloat("booking_fee");
 		issueDate = rs.getDate("issue_date");
-		totalFare = rs.getFloat("totalFare");
 		purchasedBy = rs.getString("purchased_by");
+		roundTrip = rs.getInt("round_trip");
 	}
 	
 	public Integer getTicketNum() {
@@ -36,10 +36,6 @@ public class Ticket {
 	
 	public Date getIssueDate() {
 		return issueDate;
-	}
-	
-	public Float getTotalFare() {
-		return totalFare;
 	}
 	
 	public String getPurchasedBy() {

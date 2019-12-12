@@ -22,14 +22,14 @@ import cs336.util.DatabaseUtil;
 /**
  * Servlet implementation class FlightServlet
  */
-@WebServlet("/flight")
-public class FlightServlet extends HttpServlet {
+@WebServlet("/waitlist")
+public class WaitlistServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FlightServlet() {
+    public WaitlistServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -70,41 +70,15 @@ public class FlightServlet extends HttpServlet {
 			return null;
 		}
     }
-    
-    private static Seat getSeat(Integer flightnum, String airlineid, String type) {
-    	Seat seat;
-    	
-		try (Connection db = DatabaseUtil.getConnection()) {
-			try (PreparedStatement ps = db.prepareStatement("SELECT * FROM flights NATURAL JOIN uses NATURAL JOIN seats WHERE flight_num = ? AND airline_id = ? AND class = ? AND seat_num NOT IN (SELECT seat_num FROM flights NATURAL JOIN trips NATURAL JOIN uses NATURAL JOIN seats WHERE flight_num = ? AND airline_id = ? AND class = ?) LIMIT 1;")) {
-				ps.setInt(1, flightnum);
-				ps.setString(2, airlineid);
-				ps.setString(3, type);
-				ps.setInt(4, flightnum);
-				ps.setString(5, airlineid);
-				ps.setString(6, type);
-				
-				try (ResultSet rs = ps.executeQuery()) {
-					rs.next();
-					seat = new Seat(rs);
-					return seat;
-				}
-			} 
-		} catch (SQLException ex) {
-			return null;
-		}
-    }
-    
+
     private static void add_trip(String airlineid, Integer flightnum, Integer ticketnum, Integer aircraftid, Integer seatnum, Integer meal) {
     	
     	try (Connection connection = DatabaseUtil.getConnection()){
-    		try (PreparedStatement ps = connection.prepareStatement("INSERT INTO trips (airline_id, flight_num, ticket_num, aircraft_id, seat_num, meal) values(?, ?, ?, ?, ?, ?);")){
+    		try (PreparedStatement ps = connection.prepareStatement("INSERT INTO trips (airline_id, flight_num, ticket_num, aircraft_id, seat_num, meal) values(?, ?, ?, NULL, NULL, NULL);")){
 
     		ps.setString(1, airlineid);
 	    	ps.setInt(2, flightnum);
 	    	ps.setInt(3, ticketnum);
-	    	ps.setInt(4, aircraftid);
-	    	ps.setInt(5, seatnum);
-	    	ps.setInt(6, meal);
 	    	
 	    	ps.executeUpdate();
 	    	
@@ -117,16 +91,14 @@ public class FlightServlet extends HttpServlet {
 private static void add_ticket(Integer roundtrip, Double bookingfee, Double totalfare, String user) {
     	
     	try (Connection connection = DatabaseUtil.getConnection()){
-    		try (PreparedStatement ps = connection.prepareStatement("INSERT INTO tickets (round_trip, booking_fee, issue_date, total_fare, user_name, purchased_by) values(?, ?, NOW(), ?, ?, ?);")){
+    		try (PreparedStatement ps = connection.prepareStatement("INSERT INTO tickets (round_trip, booking_fee, issue_date, total_fare, user_name, purchased_by) values(NULL, ?, NOW(), ?, ?, ?);")){
 
-	    	ps.setInt(1, roundtrip);
-	    	ps.setDouble(2, bookingfee);
-	    	ps.setDouble(3, totalfare);
+	    	ps.setDouble(1, bookingfee);
+	    	ps.setDouble(2, totalfare);
+	    	ps.setString(3, user);
 	    	ps.setString(4, user);
-	    	ps.setString(5, user);
 	    	
 	    	ps.executeUpdate();
-	    	int hello = 1;
 	    	
 		} }catch (SQLException e) {
 			e.printStackTrace();
@@ -142,7 +114,7 @@ private static void add_ticket(Integer roundtrip, Double bookingfee, Double tota
 		String airlineid = request.getParameter("airline_id");
 		Flight flight = getFlight(flightnum , airlineid);
 		request.setAttribute("flight", flight);
-		request.getRequestDispatcher("/flight.jsp").forward(request, response);
+		request.getRequestDispatcher("/waitlist.jsp").forward(request, response);
 	}
 
 	/**
@@ -152,31 +124,19 @@ private static void add_ticket(Integer roundtrip, Double bookingfee, Double tota
 		HttpSession session = request.getSession(true); 
 		String username = (String)session.getAttribute("name");
         Double bookingfee = 23.55;
-        Integer roundtrip = Integer.parseInt(request.getParameter("Roundtrip")); // Bool val from user input?
-
-        Integer meal = Integer.parseInt(request.getParameter("Meal")); // Bool val from user input?
         
         Double totalfare;
         Integer flightnum = Integer.parseInt(request.getParameter("flight_num"));
         String airlineid = request.getParameter("airline_id");
         String type = request.getParameter("type");
-        Seat seat = getSeat(flightnum, airlineid, type);
         
-        if(seat==null) {
-        	// If no seats, send to waitlist
-        	response.sendRedirect("/cs336-flight-booking/waitlist?flight_num="+flightnum+"&airline_id="+airlineid);
-        	return;
-        }
-        	Integer seatnum = seat.getSeatNum();
-        	Integer aircraftid = seat.getAircraftID();
+        Integer waitlist = Integer.parseInt(request.getParameter("waitlist"));
+        Integer roundtrip = 0;
+        Integer meal = 0;
+        Integer seatnum = null;
+        Integer aircraftid = null;
        
         Flight flight = getFlight(flightnum , airlineid);
-    	
-        if(roundtrip != 1)
-        	roundtrip = 0;
-        
-        if(meal != 1)
-        	meal = 0;
         
         if (type=="Econ")
         	totalfare = bookingfee + flight.getFareEconomy();
@@ -188,8 +148,8 @@ private static void add_ticket(Integer roundtrip, Double bookingfee, Double tota
         	response.sendRedirect("/cs336-flight-booking/LoginServlet");
         }
         
-        else {        	
-        	response.sendRedirect("/cs336-flight-booking/success2.html");
+        else if (waitlist==1) {        	
+        	response.sendRedirect("/cs336-flight-booking/success3.html");
         	
         	add_ticket(roundtrip, bookingfee, totalfare, username);
         	int ticketnum=getTicket();

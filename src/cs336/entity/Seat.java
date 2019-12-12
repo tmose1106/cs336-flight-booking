@@ -6,26 +6,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Flight {
-	public String airlineId, airlineName;
+public class Seat {
+	public String airlineId;
 	public Integer flightNumber;
 	public String flightType;
 	public List<String> daysOfWeek;
 	public Date departDatetime, arrivalDatetime;
-	public Double fareFirst, fareEconomy;
-	public String airportID;
+	public Float fareFirst, fareEconomy;
+	public Integer aircraftID;
+	public Integer seatNum;
 	
-	public Flight(ResultSet rs) throws SQLException {
+	public Seat(ResultSet rs) throws SQLException {
 		airlineId = rs.getString("airline_id");
-		airlineName = rs.getString("airline_name");
 		flightNumber = rs.getInt("flight_num");
 		flightType = rs.getString("flight_type");
 		daysOfWeek = parseDays(rs.getString("flight_days"));
 		arrivalDatetime = rs.getDate("arrival");
 		departDatetime = rs.getDate("depart");
-		fareFirst = rs.getDouble("fare_first");
-		fareEconomy = rs.getDouble("fare_economy");
-		airportID = rs.getString("airport_id");
+		fareFirst = rs.getFloat("fare_first");
+		fareEconomy = rs.getFloat("fare_economy");
+		seatNum = rs.getInt("seat_num");
+		aircraftID = rs.getInt("aircraft_id");
 	}
 	
 	public String getAirlineId() {
@@ -70,9 +71,6 @@ public class Flight {
 		return longDays;
 	}
 	
-	public String getAirlineName() {
-		return airlineName;
-	}
 
 	public String getFlightType() {
 		return flightType;
@@ -90,15 +88,20 @@ public class Flight {
 		return arrivalDatetime;
 	}
 
-	public Double getFareFirst() {
+	public Float getFareFirst() {
 		return fareFirst;
 	}
 
-	public Double getFareEconomy() {
+	public Float getFareEconomy() {
 		return fareEconomy;
 	}	
 	
-	public String getAirportID() {
-		return airportID;
-	}
+	public Integer getSeatNum() {
+		return seatNum;
+	}	
+	
+	public Integer getAircraftID() {
+		return aircraftID;
+	}	
+	
 }
