@@ -22,6 +22,7 @@
 				<th>Departure</th>
 				<th>Arr. Port</th>
 				<th>Arrival</th>
+				<th>Fare Econ.</th>
 				<th>Button</th>
 			</tr>
 		</thead>
@@ -33,6 +34,7 @@
 				<td><fmt:formatDate type="both" value="${flight.departDatetime}" /></td>
 				<td>${flight.destinationId}</td>
 				<td><fmt:formatDate type="both" value="${flight.arrivalDatetime}" /></td>
+				<td>${flight.fareEconomy}</td>
 				<td><a href="/flight?flight_num=${flight.flightNumber}&airline_id=${flight.airlineId}">View</a>
 			</tr>
 		</c:forEach>

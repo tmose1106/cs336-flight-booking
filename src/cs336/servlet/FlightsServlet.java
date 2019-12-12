@@ -34,7 +34,7 @@ public class FlightsServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-    private List<Flight> getFlights(String departDate, String departId, String destId) {
+    private List<Flight> getFlights(String airlineId, String departDate, String departId, String destId, String minPrice, String maxPrice) {
     	List<Flight> list = new ArrayList<Flight>();
 
     	String query = "SELECT flights.*,\n" + 
@@ -50,6 +50,11 @@ public class FlightsServlet extends HttpServlet {
     	
     	List<String> whereClauses = new ArrayList<String>();
     	List<Object> whereValues = new ArrayList<Object>(); 
+
+    	if (airlineId != "") {
+    		whereClauses.add("flights.airline_id = ?");
+    		whereValues.add(airlineId);
+    	}
     	
     	if (departDate != "") {
     		whereClauses.add("DATE(depart) = ?");
@@ -64,6 +69,16 @@ public class FlightsServlet extends HttpServlet {
     	if (destId != "") {
     		whereClauses.add("destinations.airport_id = ?");
     		whereValues.add(destId);
+    	}
+    	
+    	if (minPrice != "") {
+    		whereClauses.add("flights.fare_economy > ?");
+    		whereValues.add(Integer.parseInt(minPrice));
+    	}
+    	
+    	if (maxPrice != "") {
+    		whereClauses.add("flights.fare_economy < ?");
+    		whereValues.add(Integer.parseInt(maxPrice));
     	}
     	
     	query += QueryUtil.getWhereClause(whereClauses);
@@ -91,9 +106,11 @@ public class FlightsServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String departString = request.getParameter("departureDate");
 		request.setAttribute("flights", getFlights(
-				departString, request.getParameter("fromAirport"), request.getParameter("toAirport")));
+				request.getParameter("airlineId"),
+				request.getParameter("departureDate"),
+				request.getParameter("fromAirport"), request.getParameter("toAirport"), 
+				request.getParameter("minPrice"), request.getParameter("maxPrice")));
         
 		request.getRequestDispatcher("/flights.jsp").forward(request, response);
 	}
