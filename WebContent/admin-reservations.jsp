@@ -24,7 +24,7 @@
 			</tr>
 			<c:forEach var="row" items="${reservation_info}">
 				<tr>
-					<td align="center">${row.personName}</td>
+					<td align="center">${row.personName} (${row.userName})</td>
 					<td align="center">${row.ticketNum}</td>
 					<td align="center">${row.airlineName} ${row.flightNum}</td>
 					<td align="center">${row.seatNum}</td>

@@ -1,6 +1,7 @@
 <!-- Sadhana Chidambaran -->
 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt"%>
 
 <!DOCTYPE html>
 <html>
@@ -22,7 +23,7 @@
 			<c:forEach var="row" items="${customer_rep_revenue}">
 				<tr>
 					<td align="center">${row.name}</td>
-					<td align="center">${row.totalRevenue}</td>
+					<td align="center">$<fmt:formatNumber type="number" minFractionDigits="2" value="${row.totalRevenue}"/></td>
 					<td align="center">${row.totalTickets}</td>
 				</tr>
 			</c:forEach>
@@ -37,7 +38,7 @@
 			<c:forEach var="row" items="${customer_revenue}">
 				<tr>
 					<td align="center">${row.name}</td>
-					<td align="center">${row.totalRevenue}</td>
+					<td align="center">$<fmt:formatNumber type="number" minFractionDigits="2" value="${row.totalRevenue}"/></td>
 					<td align="center">${row.totalTickets}</td>
 				</tr>
 			</c:forEach>

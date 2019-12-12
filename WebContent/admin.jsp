@@ -188,12 +188,12 @@
 					<th>Flight</th>
 					<th>Tickets Sold</th>
 				</tr>
-				<tr>
-					<c:forEach var="row" items="${active_flights}">
+				<c:forEach var="row" items="${active_flights}">
+					<tr>
 						<td align="center">${row.airlineName} ${row.flightNum}</td>
 						<td align="center">${row.tickets}</td>
-					</c:forEach>
-				</tr>
+					</tr>
+				</c:forEach>
 			</table><br>
 			<input type="button" value="Refresh" onclick="window.location='/cs336-flight-booking/admin'">
 	</fieldset><br>
