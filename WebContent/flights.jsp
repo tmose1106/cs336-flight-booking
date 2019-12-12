@@ -35,7 +35,7 @@
 				<td>${flight.destinationId}</td>
 				<td><fmt:formatDate type="both" value="${flight.arrivalDatetime}" /></td>
 				<td>${flight.fareEconomy}</td>
-				<td><a href="/flight?flight_num=${flight.flightNumber}&airline_id=${flight.airlineId}">View</a>
+				<td><a href="/cs336-flight-booking/flight?flight_num=${flight.flightNumber}&airline_id=${flight.airlineId}">View</a>
 			</tr>
 		</c:forEach>
 	</table>

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import cs336.entity.Flight;
+import cs336.entity.Flight2;
 import cs336.entity.Seat;
 import cs336.entity.Ticket;
 import cs336.util.DatabaseUtil;
@@ -34,8 +34,8 @@ public class FlightServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-    private Flight getFlight(Integer flightnum, String airlineid) {
-    	Flight flight;
+    private Flight2 getFlight(Integer flightnum, String airlineid) {
+    	Flight2 flight;
 
 		try (Connection db = DatabaseUtil.getConnection()) {
 			try (PreparedStatement ps = db.prepareStatement("SELECT * FROM flights NATURAL JOIN airlines NATURAL JOIN destinations JOIN departures ON (destinations.flight_num = departures.flight_num AND destinations.airline_id = departures.airline_id AND destinations.flight_num = departures.flight_num AND destinations.airline_id=departures.airline_id) WHERE flights.flight_num = ? AND flights.airline_id = ?;")) {
@@ -44,7 +44,7 @@ public class FlightServlet extends HttpServlet {
 				
 				try (ResultSet rs = ps.executeQuery()) {
 					rs.next();
-					flight = new Flight(rs);
+					flight = new Flight2(rs);
 					return flight;
 				}
 			} 
@@ -140,7 +140,7 @@ private static void add_ticket(Integer roundtrip, Double bookingfee, Double tota
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Integer flightnum = Integer.parseInt(request.getParameter("flight_num"));
 		String airlineid = request.getParameter("airline_id");
-		Flight flight = getFlight(flightnum , airlineid);
+		Flight2 flight = getFlight(flightnum , airlineid);
 		request.setAttribute("flight", flight);
 		request.getRequestDispatcher("/flight.jsp").forward(request, response);
 	}
@@ -170,7 +170,7 @@ private static void add_ticket(Integer roundtrip, Double bookingfee, Double tota
         	Integer seatnum = seat.getSeatNum();
         	Integer aircraftid = seat.getAircraftID();
        
-        Flight flight = getFlight(flightnum , airlineid);
+        Flight2 flight = getFlight(flightnum , airlineid);
     	
         if(roundtrip != 1)
         	roundtrip = 0;
