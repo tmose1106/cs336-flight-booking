@@ -18,6 +18,7 @@ import cs336.util.DatabaseUtil;
 /**
  * Servlet implementation class Login
  */
+
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 
@@ -26,14 +27,12 @@ public class LoginServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-
 	public LoginServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
     private static boolean validate(String username, String password) {
-    	
     	try { 
     		Connection connection = DatabaseUtil.getConnection();
     		
@@ -91,7 +90,9 @@ public class LoginServlet extends HttpServlet {
         if (adminValidate(name, password)) {
         	//  If valid credentials for an admin, redirect to admin profile page and
         	// add name to session 
+
         	response.sendRedirect("admin");
+
         	
         	HttpSession session = request.getSession(true);  
         	
@@ -100,6 +101,7 @@ public class LoginServlet extends HttpServlet {
         else if (validate(name, password)) {
         	//  If valid credentials, redirect to profile page and
         	// add name to session 
+
         	response.sendRedirect("profile.jsp");
         	
         	HttpSession session = request.getSession(true);  

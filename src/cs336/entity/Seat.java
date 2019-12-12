@@ -6,31 +6,29 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Flight {
-	public String airlineId, airlineName;
+public class Seat {
+	public String airlineId;
 	public Integer flightNumber;
 	public String flightType;
 	public List<String> daysOfWeek;
-	public String departureId, destinationId;
 	public Date departDatetime, arrivalDatetime;
 	public Float fareFirst, fareEconomy;
-  public String airportID;
+	public Integer aircraftID;
+	public Integer seatNum;
 	
-	public Flight(ResultSet rs) throws SQLException {
+	public Seat(ResultSet rs) throws SQLException {
 		airlineId = rs.getString("airline_id");
-		airlineName = rs.getString("airline_name");
 		flightNumber = rs.getInt("flight_num");
 		flightType = rs.getString("flight_type");
 		daysOfWeek = parseDays(rs.getString("flight_days"));
-		departureId = rs.getString("departure_id");
-		destinationId = rs.getString("destination_id");
 		arrivalDatetime = rs.getDate("arrival");
 		departDatetime = rs.getDate("depart");
 		fareFirst = rs.getFloat("fare_first");
 		fareEconomy = rs.getFloat("fare_economy");
-    airportID = rs.getString("airport_id");
+		seatNum = rs.getInt("seat_num");
+		aircraftID = rs.getInt("aircraft_id");
 	}
-
+	
 	public String getAirlineId() {
 		return airlineId;
 	}
@@ -73,9 +71,6 @@ public class Flight {
 		return longDays;
 	}
 	
-	public String getAirlineName() {
-		return airlineName;
-	}
 
 	public String getFlightType() {
 		return flightType;
@@ -83,14 +78,6 @@ public class Flight {
 
 	public List<String> getDaysOfWeek() {
 		return daysOfWeek;
-	}
-
-	public String getDepartureId() {
-		return departureId;
-	}
-
-	public String getDestinationId() {
-		return destinationId;
 	}
 
 	public Date getDepartDatetime() {
@@ -107,9 +94,14 @@ public class Flight {
 
 	public Float getFareEconomy() {
 		return fareEconomy;
-	}
-  
-  public String getAirportID() {
-		return airportID;
-	}
+	}	
+	
+	public Integer getSeatNum() {
+		return seatNum;
+	}	
+	
+	public Integer getAircraftID() {
+		return aircraftID;
+	}	
+	
 }
