@@ -67,7 +67,6 @@ public class AdminModifyUserServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		
 		if (validate("users", "user_name", request.getParameter("name"))) {
 			editUser(request.getParameter("name"), request.getParameter("field"), request.getParameter("new_info"));
 
