@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cs336.entity.Flight;
 import cs336.util.DatabaseUtil;
+import cs336.util.QueryUtil;
 
 /**
  * Servlet implementation class FlightsServlet
@@ -33,21 +34,45 @@ public class FlightsServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-    private List<Flight> getFlights(String departDate) {
+    private List<Flight> getFlights(String departDate, String departId, String destId) {
     	List<Flight> list = new ArrayList<Flight>();
 
-    	String query = "SELECT * FROM flights NATURAL JOIN airlines";
+    	String query = "SELECT flights.*,\n" + 
+    			"       airlines.airline_name,\n" + 
+    			"       destinations.airport_id AS destination_id,\n" + 
+    			"       departures.airport_id AS departure_id\n" + 
+    			"FROM flights\n" + 
+    			"NATURAL JOIN airlines\n" + 
+    			"NATURAL JOIN destinations\n" + 
+    			"JOIN departures ON ((departures.airline_id,\n" + 
+    			"                     departures.flight_num) = (flights.airline_id,\n" + 
+    			"                                               flights.flight_num))\n";
     	
-    	if (departDate != null) {
-    		query += " WHERE DATE(depart) = ?";
+    	List<String> whereClauses = new ArrayList<String>();
+    	List<Object> whereValues = new ArrayList<Object>(); 
+    	
+    	if (departDate != "") {
+    		whereClauses.add("DATE(depart) = ?");
+    		whereValues.add(Date.valueOf(departDate));
     	}
+    	
+    	if (departId != "") {
+    		whereClauses.add("departures.airport_id = ?");
+    		whereValues.add(departId);
+    	}
+    	
+    	if (destId != "") {
+    		whereClauses.add("destinations.airport_id = ?");
+    		whereValues.add(destId);
+    	}
+    	
+    	query += QueryUtil.getWhereClause(whereClauses);
     	
 		try (Connection db = DatabaseUtil.getConnection()) {
 			try (PreparedStatement ps = db.prepareStatement(query + ";")) {
-				if (departDate != null) {
-					Date depart = Date.valueOf(departDate);
-		    		ps.setDate(1, depart);
-		    	}
+				for (int i = 0; i < whereValues.size(); i++) {
+					ps.setObject(i + 1, whereValues.get(i));
+				}
 				
 				try (ResultSet rs = ps.executeQuery()) {
 					while (rs.next()) {
@@ -67,7 +92,8 @@ public class FlightsServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String departString = request.getParameter("departureDate");
-		request.setAttribute("flights", getFlights(departString));
+		request.setAttribute("flights", getFlights(
+				departString, request.getParameter("fromAirport"), request.getParameter("toAirport")));
         
 		request.getRequestDispatcher("/flights.jsp").forward(request, response);
 	}

@@ -11,6 +11,7 @@ public class Flight {
 	public Integer flightNumber;
 	public String flightType;
 	public List<String> daysOfWeek;
+	public String departureId, destinationId;
 	public Date departDatetime, arrivalDatetime;
 	public Float fareFirst, fareEconomy;
 	
@@ -20,6 +21,8 @@ public class Flight {
 		flightNumber = rs.getInt("flight_num");
 		flightType = rs.getString("flight_type");
 		daysOfWeek = parseDays(rs.getString("flight_days"));
+		departureId = rs.getString("departure_id");
+		destinationId = rs.getString("destination_id");
 		arrivalDatetime = rs.getDate("arrival");
 		departDatetime = rs.getDate("depart");
 		fareFirst = rs.getFloat("fare_first");
@@ -80,6 +83,14 @@ public class Flight {
 		return daysOfWeek;
 	}
 
+	public String getDepartureId() {
+		return departureId;
+	}
+
+	public String getDestinationId() {
+		return destinationId;
+	}
+	
 	public Date getDepartDatetime() {
 		return departDatetime;
 	}

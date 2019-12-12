@@ -8,10 +8,18 @@
 	<h1>Search</h1>
 	<form id="filters" action="flights">
 		<fieldset>
+			<legend>Airports</legend>
+			<label for="fromAirport">From:</label>
+			<input name="fromAirport" type="text">
+			<label for="toAirport">To:</label>
+			<input name="toAirport" type="text">
+		</fieldset>
+		<fieldset>
 			<legend>Dates and Times</legend>
 			<label for="departureDate">Departure:</label>
 			<input name="departureDate" type="date">
 		</fieldset>
+		
 		<br>
 		<button>Search</button>
 	</form>
