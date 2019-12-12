@@ -22,6 +22,6 @@
 	    }
 	%>
 	</p>
-	<input type="button" value="Log Out" onclick="window.location='/servlet-demo/logout.jsp'" >
+	<input type="button" value="Log Out" onclick="window.location='/cs336-flight-booking/logout.jsp'" >
 </body>
 </html>

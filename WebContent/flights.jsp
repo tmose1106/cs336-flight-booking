@@ -13,39 +13,31 @@
 <body>
 	<header></header>
 	<h1>Flights</h1>
-	<div id="filters">
-	</div>
-	<div id="flights">
+	<table>
+		<thead>
+			<tr>
+				<th>Airline</th>
+				<th>Type</th>
+				<th>Dep. Port</th>
+				<th>Departure</th>
+				<th>Arr. Port</th>
+				<th>Arrival</th>
+				<th>Fare Econ.</th>
+				<th>Button</th>
+			</tr>
+		</thead>
 		<c:forEach var="flight" items="${flights}">
-			<table>
-				<tr>
-					<th>Departure</th>
-					<td>${flight.airportID}</a></td>
-				</tr>
-				<tr>
-				<tr>
-					<th>Destination</th>
-					<td><a href="flight?flight_num=${flight.flightNumber}&airline_id=${flight.airlineId}">${flight.airportID}</a></td>
-				</tr>
-				<tr>
-					<th>Airline</th>
-					<td>${flight.airlineName}</td>
-				</tr>
-				<tr>
-					<th>Type</th>
-					<td>${flight.flightType}</td>
-				</tr>
-				<tr>
-					<th>Departure</th>
-					<td><fmt:formatDate type="both" value="${flight.departDatetime}" /></td>
-				</tr>
-				<tr>
-					<th>Arrival</th>
-					<td><fmt:formatDate type="both" value="${flight.arrivalDatetime}" /></td>
-					<td><input type="submit" value="View"></td>
-				</tr>
-			</table>
+			<tr>
+				<td>${flight.airlineName}</td>
+				<td>${flight.flightType}</td>
+				<td>${flight.departureId}</td>
+				<td><fmt:formatDate type="both" value="${flight.departDatetime}" /></td>
+				<td>${flight.destinationId}</td>
+				<td><fmt:formatDate type="both" value="${flight.arrivalDatetime}" /></td>
+				<td>${flight.fareEconomy}</td>
+				<td><a href="/flight?flight_num=${flight.flightNumber}&airline_id=${flight.airlineId}">View</a>
+			</tr>
 		</c:forEach>
-	</div>
+	</table>
 </body>
 </html>

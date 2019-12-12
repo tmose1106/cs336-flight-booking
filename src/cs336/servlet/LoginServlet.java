@@ -18,87 +18,57 @@ import cs336.util.DatabaseUtil;
 /**
  * Servlet implementation class Login
  */
-@WebServlet(description = "Demo for login page", urlPatterns = { "/LoginServlet" })
+
+@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginServlet() {
+	public LoginServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
     private static boolean validate(String username, String password) {
-    	Connection connection = DatabaseUtil.getConnection();
-    	
-    	PreparedStatement ps;
-		
-    	try {
-    		// Create a prepared statement, for substituting in values
-			ps = connection.prepareStatement(
-				"SELECT * FROM users WHERE user_name = ? AND user_pass = ?;");
-			
-	    	ps.setString(1, username);
-	    	ps.setString(2, password);
-	    	
-	    	ResultSet rs = ps.executeQuery();
-	    	
-	    	// next() returns a boolean saying if there are more rows in the set
-	    	return rs.next();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+    	try { 
+    		Connection connection = DatabaseUtil.getConnection();
+    		
+    		PreparedStatement ps = connection.prepareStatement("SELECT * FROM users WHERE user_name = ? AND user_pass = ?;");
+    	    ps.setString(1, username);
+    	    ps.setString(2, password);
+    	    	
+    	    ResultSet rs = ps.executeQuery();
+    	    
+    	    return rs.next();
+    	   
+    	}
+    	catch (SQLException e) {
+    		e.printStackTrace();
+    	}
     	
     	return false;
     }
     
-    // Determine what the users privilege level is
-    private static String getPrivilegeType(String username) {
-    	Connection connection = DatabaseUtil.getConnection();
-    	
-    	PreparedStatement ps;
-    	
-    	try {
-    		ps = connection.prepareStatement("SELECT * FROM users WHERE user_name = ?;");
-    		
-    		ps.setString(1, username);
-    		
-    		ResultSet rs = ps.executeQuery();
-    		
-    		//Get the privilege
-    		if (rs.next()) {
-    			String access = rs.getString("user_type");
-    			return access;
-    		}
-    	} catch (SQLException e) {
-			e.printStackTrace();
-		}
-    	// If privilege column is NULL return lowest level privilege;
-    	return "C";
-	}
-
     private static boolean adminValidate(String username, String password) {
-    	Connection connection = DatabaseUtil.getConnection();
     	
-    	PreparedStatement ps;
-		
-    	try {
-    		// Create a prepared statement, for substituting in values
-			ps = connection.prepareStatement(
-				"SELECT * FROM users WHERE user_name = ? AND user_pass = ? AND user_type = 'A';");
-			
-	    	ps.setString(1, username);
-	    	ps.setString(2, password);
-	    	
-	    	ResultSet rs = ps.executeQuery();
-	    	
-	    	// next() returns a boolean saying if there are more rows in the set
-	    	return rs.next();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+    	try { 
+    		Connection connection = DatabaseUtil.getConnection();
+    		
+    		PreparedStatement ps = connection.prepareStatement("SELECT * FROM users WHERE user_name = ? AND user_pass = ? AND user_type = 'A';");
+    	    ps.setString(1, username);
+    	    ps.setString(2, password);
+    	    	
+    	    ResultSet rs = ps.executeQuery();
+    	    
+    	    return rs.next();
+    	   
+    	}
+    	catch (SQLException e) {
+    		e.printStackTrace();
+    	}
     	
     	return false;
     }
@@ -120,7 +90,9 @@ public class LoginServlet extends HttpServlet {
         if (adminValidate(name, password)) {
         	//  If valid credentials for an admin, redirect to admin profile page and
         	// add name to session 
-        	response.sendRedirect("admin-profile.jsp");
+
+        	response.sendRedirect("admin");
+
         	
         	HttpSession session = request.getSession(true);  
         	
@@ -129,12 +101,8 @@ public class LoginServlet extends HttpServlet {
         else if (validate(name, password)) {
         	//  If valid credentials, redirect to profile page and
         	// add name to session 
-        	String userType = getPrivilegeType(name);
-        	if (userType.equals("R")) {
-        		response.sendRedirect("customerRepProfile.jsp");
-        	} else {
-        		response.sendRedirect("profile.jsp");
-        	}
+
+        	response.sendRedirect("profile.jsp");
         	
         	HttpSession session = request.getSession(true);  
         	

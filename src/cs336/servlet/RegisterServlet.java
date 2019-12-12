@@ -30,41 +30,33 @@ public class RegisterServlet extends HttpServlet {
     }
 
     private static boolean validate(String username) {
-    	Connection connection = DatabaseUtil.getConnection();
-    	
-    	PreparedStatement ps;
-		
-    	try {
-    		// Create a prepared statement, for substituting in values
-			ps = connection.prepareStatement(
-				"SELECT * FROM users WHERE user_name = ?;");
-			
-	    	ps.setString(1, username);
-	    	
-	    	ResultSet rs = ps.executeQuery();
-	    	
-	    	// next() returns a boolean saying if there are more rows in the set
-	    	return rs.next();
-		} catch (SQLException e) {
+    	try (Connection connection = DatabaseUtil.getConnection()) {
+    		
+        	try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM users WHERE user_name = ?;");) {
+    			
+    	    	ps.setString(1, username);
+    	    	
+    	    	try (ResultSet rs = ps.executeQuery()) {
+        	    	return rs.next();
+
+    	    	}
+    		}
+    	} catch (SQLException e) {
 			e.printStackTrace();
-		}
-    	
+        }
     	return false;
     }
     
     private static void add_user(String username, String password, String name) {
-    	Connection connection = DatabaseUtil.getConnection();
-    	
-    	try {
-    		PreparedStatement ps = connection.prepareStatement(
-				"INSERT INTO users (user_name, user_pass, person_name) values(?, ?, ?);");
-
-	    	ps.setString(1, username);
-	    	ps.setString(2, password);
-	    	ps.setString(3, name);
-	    	
-	    	ps.executeUpdate();
-		} catch (SQLException e) {
+    	try (Connection connection = DatabaseUtil.getConnection()) {
+    		try (PreparedStatement ps = connection.prepareStatement("INSERT INTO users (user_name, user_pass, person_name) values(?, ?, ?);");) {
+    	    	ps.setString(1, username);
+    	    	ps.setString(2, password);
+    	    	ps.setString(3, name);
+    	    	
+    	    	ps.executeUpdate();
+    		}
+    	} catch (SQLException e) {
 			e.printStackTrace();
 		}
     }
@@ -100,7 +92,7 @@ public class RegisterServlet extends HttpServlet {
         }
         
         else {        	
-        	response.sendRedirect("/servlet-demo/success.html");
+        	response.sendRedirect("/cs336-flight-booking/success.html");
         	
         	add_user(username, password, name);
 

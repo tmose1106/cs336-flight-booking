@@ -8,10 +8,10 @@
 </head>
 <body>
 	<header>
-		<a href="/servlet-demo/">Home</a>
+		<a href="/cs336-flight-booking/">Home</a>
 	</header>
 	<% session.invalidate(); %>
 	<p>You have been logged out.</p>
-	<input type="button" value="Home" onclick="window.location='/servlet-demo/'" >
+	<input type="button" value="Home" onclick="window.location='/cs336-flight-booking/'" >
 </body>
 </html>
